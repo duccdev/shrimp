@@ -1,9 +1,9 @@
-__all__ = ("Route",)
-
 from typing import Callable
 from .httpmethod import HttpMethod
 from .request import Request
 from .response import BaseResponse
+
+__all__ = ("Route",)
 
 
 class Route:

@@ -1,5 +1,3 @@
-__all__ = ("Shrimp",)
-
 import multiprocessing, socket
 from concurrent.futures import ThreadPoolExecutor
 from traceback import print_exc
@@ -10,6 +8,8 @@ from .httpmethod import HttpMethod
 from .httpstatus import NotFound
 from .request import Request
 from .response import BaseResponse
+
+__all__ = ("Shrimp",)
 
 
 class Shrimp:

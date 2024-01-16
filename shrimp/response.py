@@ -1,8 +1,8 @@
-__all__ = ("BaseResponse", "FileResponse")
-
 from os import PathLike
 from typing import Mapping
 from .httpstatus import OK, HttpStatus
+
+__all__ = ("BaseResponse", "FileResponse")
 
 
 class BaseResponse:

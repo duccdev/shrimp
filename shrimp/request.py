@@ -1,8 +1,8 @@
-__all__ = ("Request",)
-
 from ._parsers import parse_http_request
 from .httpmethod import HttpMethod
 from .errors import BadRequestStringError, InvalidMethodError
+
+__all__ = ("Request",)
 
 
 class Request:
