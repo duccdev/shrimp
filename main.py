@@ -1,17 +1,14 @@
-import shrimp
+from shrimp import Shrimp, Request
 from shrimp import httpstatus
+from shrimp.response import FileResponse
 
 
-krill = shrimp.Shrimp()
+krill = Shrimp()
 
 
 @krill.get("/")
-def index(req: shrimp.Request) -> shrimp.Response:
-    return shrimp.Response(
-        httpstatus.OK,
-        {"Content-Type": "text/html"},
-        f"<h1>{req.method} {req.path}</div>",
-    )
+def index(req: Request) -> FileResponse:
+    return FileResponse("index.html")
 
 
 krill.serve()

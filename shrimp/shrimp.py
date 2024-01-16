@@ -9,7 +9,7 @@ from .route import Route
 from .httpmethod import HttpMethod
 from .httpstatus import NotFound
 from .request import Request
-from .response import Response
+from .response import BaseResponse
 
 
 class Shrimp:
@@ -75,7 +75,7 @@ class Shrimp:
                     return
 
             conn.sendall(
-                Response(
+                BaseResponse(
                     NotFound, {"Content-Type": "text/html"}, "<h1>Not Found</h1>"
                 ).raw()
             )
@@ -90,9 +90,11 @@ class Shrimp:
 
         Decorated function args:
             req (Request): Request data
+
+        Decorated function return: BaseResponse
         """
 
-        def wrapper(handler: Callable[[Request], Response]):
+        def wrapper(handler: Callable[[Request], BaseResponse]):
             self.routes.append(Route(HttpMethod.GET, path, handler))
 
         return wrapper

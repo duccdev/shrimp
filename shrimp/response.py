@@ -1,12 +1,16 @@
-__all__ = ("Response",)
+__all__ = ("BaseResponse", "FileResponse")
 
+from os import PathLike
 from typing import Mapping
-from .httpstatus import HttpStatus
+from .httpstatus import OK, HttpStatus
 
 
-class Response:
+class BaseResponse:
     def __init__(
-        self, status: HttpStatus, headers: Mapping[str, str], body: str
+        self,
+        status: HttpStatus,
+        headers: Mapping[str, str],
+        body: str | bytes,
     ) -> None:
         self.status = status
         self.headers = headers
@@ -19,3 +23,19 @@ class Response:
         )
 
         return (f"{status_line}\r\n{headers}\r\n\r\n{self.body}").encode()
+
+
+class FileResponse(BaseResponse):
+    def __init__(
+        self,
+        filename: str | PathLike,
+        mime_type: str = "text/html",
+        status: HttpStatus = OK,
+        headers: Mapping[str, str] = {},
+        is_binary: bool = False,
+    ) -> None:
+        final_headers = dict(headers)
+        final_headers["Content-Type"] = mime_type
+
+        with open(filename, "rb" if is_binary else "r") as fp:
+            super().__init__(status, final_headers, fp.read())
