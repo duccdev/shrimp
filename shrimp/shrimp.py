@@ -13,13 +13,11 @@ from .response import BaseResponse
 
 
 class Shrimp:
-    routes: list[Route]
-
     def __init__(self) -> None:
         """Creates a Shrimp server"""
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.routes = []
+        self.routes: list[Route] = []
         self.max_conns = (multiprocessing.cpu_count() * multiprocessing.cpu_count()) * 4
         self.executor = ThreadPoolExecutor(self.max_conns)
 
