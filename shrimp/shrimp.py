@@ -1,7 +1,5 @@
-import multiprocessing, socket
+import asyncio, socket, multiprocessing
 from concurrent.futures import ThreadPoolExecutor
-from traceback import print_exc
-from threading import Thread
 from typing import Callable
 from .route import Route
 from .httpmethod import HttpMethod
@@ -12,16 +10,27 @@ from .response import BaseResponse
 __all__ = ("Shrimp",)
 
 
+async def maybe_coroutine(func, *args, **kwargs):
+    if asyncio.iscoroutine(func):
+        return await func
+    elif asyncio.iscoroutinefunction(func):
+        return await func(*args, **kwargs)
+    else:
+        return func(*args, **kwargs)
+
+
 class Shrimp:
+    routes: list[Route]
+
     def __init__(self) -> None:
         """Creates a Shrimp server"""
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.routes: list[Route] = []
+        self.routes = []
         self.max_conns = (multiprocessing.cpu_count() * multiprocessing.cpu_count()) * 4
         self.executor = ThreadPoolExecutor(self.max_conns)
 
-    def _serve(self, ip: str, port: int) -> None:
+    async def _serve(self, ip: str, port: int) -> None:
         """Internal serve function, Shrimp.serve and Shrimp.nbserve is a wrapper on Shrimp._serve
 
         Args:
@@ -34,22 +43,16 @@ class Shrimp:
 
         try:
             while True:
-                conn, addr = self._socket.accept()
-
-                try:
-                    self._handle(conn, addr)
-                except:
-                    print_exc()
-                    conn.close()
+                conn, addr = await self.loop.sock_accept(self._socket)
+                asyncio.ensure_future(self._handle(conn, addr))
         except KeyboardInterrupt:
             self.close()
         except OSError as e:
             if e.errno == 9:
                 return
-
             raise e
 
-    def _handle(self, conn: socket.socket, addr: tuple[str, int]) -> None:
+    async def _handle(self, conn: socket.socket, addr: tuple[str, int]) -> None:
         """Internal connection handler
 
         Args:
@@ -57,28 +60,27 @@ class Shrimp:
             addr (tuple[str, int]): Client address
         """
 
-        while True:
-            data = conn.recv(69420)
+        data = await self.loop.sock_recv(conn, 69420)
 
-            if not data:
+        if not data:
+            conn.close()
+            return
+
+        req = Request(data.decode())
+
+        for route in self.routes:
+            if route.path == req.path:
+                response = await maybe_coroutine(route.handler, req)
+                await self.loop.sock_sendall(conn, response.raw())
                 conn.close()
                 return
 
-            req = Request(data.decode())
-
-            for route in self.routes:
-                if route.path == req.path:
-                    conn.sendall(route.handler(req).raw())
-                    conn.close()
-                    return
-
-            conn.sendall(
-                BaseResponse(
-                    NotFound, {"Content-Type": "text/html"}, "<h1>Not Found</h1>"
-                ).raw()
-            )
-            conn.close()
-            return
+        response = BaseResponse(
+            NotFound, {"Content-Type": "text/html"}, "<h1>Not Found</h1>"
+        )
+        await self.loop.sock_sendall(conn, response.raw())
+        conn.close()
+        return
 
     def get(self, path: str):
         """Decorator for creating a GET route
@@ -105,7 +107,8 @@ class Shrimp:
             port (int, optional): Port. Defaults to 8080.
         """
 
-        self._serve(ip, port)
+        self.loop = asyncio.get_event_loop()
+        self.loop.run_until_complete(self._serve(ip, port))
 
     def nbserve(self, ip: str = "0.0.0.0", port: int = 8080) -> None:
         """Starts serving Shrimp on IP:port (is non-blocking, for blocking serve, use Shrimp.serve)
@@ -115,7 +118,9 @@ class Shrimp:
             port (int, optional): Port. Defaults to 8080.
         """
 
-        Thread(target=self._serve, args=(ip, port)).start()
+        self.loop = asyncio.get_event_loop()
+        self.loop.create_task(self._serve(ip, port))
 
     def close(self) -> None:
+        self.loop.close()
         self._socket.close()
