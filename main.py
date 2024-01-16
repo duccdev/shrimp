@@ -1,5 +1,4 @@
 from shrimp import Shrimp, Request
-from shrimp import httpstatus
 from shrimp.response import FileResponse
 
 
