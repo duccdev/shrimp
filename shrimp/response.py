@@ -8,9 +8,9 @@ __all__ = ("BaseResponse", "FileResponse")
 class BaseResponse:
     def __init__(
         self,
-        status: HttpStatus,
-        headers: Mapping[str, str],
-        body: str | bytes,
+        status: HttpStatus = OK,
+        headers: Mapping[str, str] = {},
+        body: str | bytes | None = None,
     ) -> None:
         self.status = status
         self.headers = headers
@@ -18,11 +18,14 @@ class BaseResponse:
 
     def raw(self) -> bytes:
         status_line = f"HTTP/1.1 {self.status.code} {self.status.message}"
+
         headers = "\r\n".join(
             [f"{name}: {self.headers[name]}" for name in self.headers]
         )
 
-        return (f"{status_line}\r\n{headers}\r\n\r\n{self.body}").encode()
+        appendix = f"\r\n\r\n{self.body}" if self.body is not None else ""
+
+        return (f"{status_line}\r\n{headers}{appendix}").encode()
 
 
 class FileResponse(BaseResponse):

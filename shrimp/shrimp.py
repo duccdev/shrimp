@@ -5,7 +5,7 @@ from threading import Thread
 from typing import Callable
 from .route import Route
 from .httpmethod import HttpMethod
-from .httpstatus import NotFound
+from .httpstatus import NotFound, ContentTooLarge
 from .request import Request
 from .response import BaseResponse
 from ._tools.maybe_coroutine import maybe_coroutine
@@ -14,17 +14,20 @@ __all__ = ("Shrimp",)
 
 
 class Shrimp:
-    def __init__(self, max_conns: int = 100000) -> None:
+    def __init__(self, max_conns: int = 100000, max_req_size: int = 16384) -> None:
         """Creates a Shrimp server
 
         Args:
-            max_conns (int): Max connections and threads (Do not set to 0)
+            max_conns (int, optional): Max connections and threads (Do not set to 0). Defaults to 100000.
+            max_req_size (int, optional): Max request size. Defaults to 16384.
         """
 
-        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.routes: list[Route] = []
         self.max_conns = max_conns
-        self.executor = ThreadPoolExecutor(self.max_conns)
+        self.max_req_size = max_req_size
+
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._executor = ThreadPoolExecutor(self.max_conns)
 
     async def _serve(self, ip: str, port: int) -> None:
         """Internal serve function, Shrimp.serve and Shrimp.nbserve is a wrapper on Shrimp._serve
@@ -63,11 +66,14 @@ class Shrimp:
         """
 
         while True:
-            data = conn.recv(69420)
+            data = conn.recv(self.max_req_size + 1)
 
             if not data:
                 conn.close()
                 return
+
+            if len(data) >= (self.max_req_size + 1):
+                conn.sendall(BaseResponse(ContentTooLarge).raw())
 
             req = Request(data.decode())
 

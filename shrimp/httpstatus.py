@@ -1,4 +1,4 @@
-__all__ = ("OK", "NotFound")
+__all__ = ("OK", "NotFound", "ContentTooLarge")
 
 
 class HttpStatus:
@@ -9,3 +9,4 @@ class HttpStatus:
 
 OK = HttpStatus(200, "OK")
 NotFound = HttpStatus(404, "Not Found")
+ContentTooLarge = HttpStatus(413, "Content Too Large")
