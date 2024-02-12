@@ -10,3 +10,4 @@ class HttpStatus:
 OK = HttpStatus(200, "OK")
 NotFound = HttpStatus(404, "Not Found")
 ContentTooLarge = HttpStatus(413, "Content Too Large")
+InternalServerError = HttpStatus(500, "Internal Server Error")

@@ -1,11 +1,11 @@
-import socket, asyncio
+import socket, asyncio, sys
 from concurrent.futures import ThreadPoolExecutor
 from traceback import print_exc
 from threading import Thread
 from typing import Callable
 from .route import Route
 from .httpmethod import HttpMethod
-from .httpstatus import NotFound, ContentTooLarge
+from .httpstatus import InternalServerError, NotFound, ContentTooLarge
 from .request import Request
 from .response import BaseResponse
 from ._tools.maybe_coroutine import maybe_coroutine
@@ -75,10 +75,19 @@ class Shrimp:
             if len(data) >= (self.max_req_size + 1):
                 conn.sendall(BaseResponse(ContentTooLarge).raw())
 
-            req = Request(data.decode())
+            try:
+                req = Request(data.decode())
+            except:
+                print_exc(file=sys.stderr)
+                BaseResponse(
+                    InternalServerError,
+                    {"Content-Type": "text/html"},
+                    "<h1>Internal Server Error</h1>",
+                ).raw()
+                return
 
             for route in self.routes:
-                if route.path == req.path:
+                if route.path == req.path and route.method == req.method:
                     conn.sendall((await maybe_coroutine(route.handler, req)).raw())
                     conn.close()
                     return
