@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shrimp-http"
+version = "0.1.0"
+description = "Shrimp 🦐 is a batteries-included zero-dependency WSGI/ASGI web-framework for Python"
+readme = "README.md"
+authors = [{ name = "Krill Issue" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["wsgi", "asgi", "server", "webserver", "api", "web", "framework"]
+dependencies = []
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+dev = ["black"]
+
+[project.urls]
+Homepage = "https://github.com/krillissue/shrimp"

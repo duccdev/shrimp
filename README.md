@@ -44,7 +44,7 @@ To install **Python <img src="https://python.org/favicon.ico" alt="Python" heigh
 To install **Shrimp** 🦐, run the following `pip` command.
 
 ```
-$ pip install -U shrimp
+$ pip install -U shrimp-http
 ```
 
 **Shrimp** 🦐 is fully made with built-in packages. There's no dependencies, hence being batteries-included.
