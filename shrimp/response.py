@@ -1,3 +1,4 @@
+import json
 from os import PathLike
 from typing import Mapping
 from .httpstatus import OK, HttpStatus
@@ -16,7 +17,7 @@ class BaseResponse:
         self.headers = headers
         self.body = body
 
-    def raw(self) -> bytes:
+    def _raw(self) -> bytes:
         status_line = f"HTTP/1.1 {self.status.code} {self.status.message}"
 
         headers = "\r\n".join(
@@ -42,3 +43,42 @@ class FileResponse(BaseResponse):
 
         with open(filename, "rb" if is_binary else "r") as fp:
             super().__init__(status, final_headers, fp.read())
+
+
+class JSONResponse(BaseResponse):
+    def __init__(
+        self,
+        body: dict | list | tuple | str | int | float,
+        status: HttpStatus = OK,
+        headers: Mapping[str, str] = {},
+    ) -> None:
+        final_headers = dict(headers)
+        final_headers["Content-Type"] = "application/json"
+
+        super().__init__(status, final_headers, json.dumps(body))
+
+
+class TextResponse(BaseResponse):
+    def __init__(
+        self,
+        body: str,
+        status: HttpStatus = OK,
+        headers: Mapping[str, str] = {},
+    ) -> None:
+        final_headers = dict(headers)
+        final_headers["Content-Type"] = "text/plain"
+
+        super().__init__(status, final_headers, body)
+
+
+class HTMLResponse(BaseResponse):
+    def __init__(
+        self,
+        body: str,
+        status: HttpStatus = OK,
+        headers: Mapping[str, str] = {},
+    ) -> None:
+        final_headers = dict(headers)
+        final_headers["Content-Type"] = "text/html"
+
+        super().__init__(status, final_headers, body)

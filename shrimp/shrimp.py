@@ -73,7 +73,7 @@ class Shrimp:
                 return
 
             if len(data) >= (self.max_req_size + 1):
-                conn.sendall(BaseResponse(ContentTooLarge).raw())
+                conn.sendall(BaseResponse(ContentTooLarge)._raw())
 
             try:
                 req = Request(data.decode())
@@ -83,19 +83,19 @@ class Shrimp:
                     InternalServerError,
                     {"Content-Type": "text/html"},
                     "<h1>Internal Server Error</h1>",
-                ).raw()
+                )._raw()
                 return
 
             for route in self.routes:
                 if route.path == req.path and route.method == req.method:
-                    conn.sendall((await maybe_coroutine(route.handler, req)).raw())
+                    conn.sendall((await maybe_coroutine(route.handler, req))._raw())
                     conn.close()
                     return
 
             conn.sendall(
                 BaseResponse(
                     NotFound, {"Content-Type": "text/html"}, "<h1>Not Found</h1>"
-                ).raw()
+                )._raw()
             )
             conn.close()
             return
