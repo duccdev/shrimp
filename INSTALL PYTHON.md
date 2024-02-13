@@ -1,5 +1,5 @@
 # Installing Python <img src="https://python.org/favicon.ico" alt="Python" height="18">
-This Wiki page shows you how to install python on your device.
+This file shows you how to install **Python <img src="https://python.org/favicon.ico" alt="Python" height="12">** on your device.
 
 ## Table of Contents
 - [**On Windows 10 <img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Windows_logo_-_2012_%28dark_blue%29.svg" alt="Windows 10" height="16">/11 <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg" alt="Windows 11" height="16">**](#on-windows-10-11-)

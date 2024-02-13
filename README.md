@@ -15,7 +15,7 @@ SOFTWARE.
 
 <div align="center">
 <h1>🦐 Shrimp</h1>
-<img src="https://img.shields.io/badge/Batteries_🔋-Included-yellow?labelColor=000000&style=for-the-badge"> <img src="https://img.shields.io/badge/Python-3.10+-FFD43B?labelColor=306998&style=for-the-badge&logo=python&logoColor=white"> <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge">
+<a href="#install-shrimp"><img src="https://img.shields.io/badge/Batteries_🔋-Included-yellow?labelColor=000000&style=for-the-badge"></a> <a href="#requirements"><img src="https://img.shields.io/badge/Python-3.10+-FFD43B?labelColor=306998&style=for-the-badge&logo=python&logoColor=white"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"></a>
 </div>
 
 **Shrimp** 🦐 is a batteries-included zero-dependency WSGI/ASGI web-framework for **Python** <img src="https://python.org/favicon.ico" alt="Python" height="12">
@@ -33,7 +33,7 @@ def index(req: Request) -> HTMLResponse:
 
 shrimp.serve()
 ```
-*Simple HTTP server*
+*Simple HTTP server using **Shrimp** 🦐*
 
 # Requirements
 - [**Python 3.10.x <img src="https://python.org/favicon.ico" alt="Python" height="12"> or above with `pip`**](https://python.org)
