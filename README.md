@@ -31,16 +31,20 @@ server = Shrimp()
 def index(req: Request) -> HTMLResponse:
     return HTMLResponse("<h1>Hello, World!</h1>")
 
+shrimp.serve()
 ```
 *Simple HTTP server*
 
 # Requirements
 - [**Python 3.10.x <img src="https://python.org/favicon.ico" alt="Python" height="12"> or above with `pip`**](https://python.org)
+
 To install **Python <img src="https://python.org/favicon.ico" alt="Python" height="12">** with `pip`, check [this file](INSTALL%20PYTHON.md).
 
 # Install Shrimp
 To install **Shrimp** 🦐, run the following `pip` command.
+
 ```
 $ pip install -U shrimp
 ```
+
 **Shrimp** 🦐 is fully made with built-in packages. There's no dependencies, hence being batteries-included.
