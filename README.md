@@ -15,7 +15,7 @@ SOFTWARE.
 
 <div align="center">
 <h1>🦐 Shrimp</h1>
-<href url="#install-shrimp"><#img src="https://img.shields.io/badge/Batteries_🔋-Included-yellow?labelColor=000000&style=for-the-badge"></href> <href url="#requirements"><img src="https://img.shields.io/badge/Python-3.10+-FFD43B?labelColor=306998&style=for-the-badge&logo=python&logoColor=white"></href> <href url="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"></href>
+<a href="#install-shrimp"><img src="https://img.shields.io/badge/Batteries_🔋-Included-yellow?labelColor=000000&style=for-the-badge"></a> <a href="#requirements"><img src="https://img.shields.io/badge/Python-3.10+-FFD43B?labelColor=306998&style=for-the-badge&logo=python&logoColor=white"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"></a>
 </div>
 
 **Shrimp** 🦐 is a batteries-included zero-dependency WSGI/ASGI web-framework for **Python** <img src="https://python.org/favicon.ico" alt="Python" height="12">
