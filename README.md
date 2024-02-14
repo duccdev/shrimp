@@ -31,7 +31,7 @@ server = Shrimp()
 def index(req: Request) -> HTMLResponse:
     return HTMLResponse("<h1>Hello, World!</h1>")
 
-shrimp.serve()
+server.serve()
 ```
 *Simple HTTP server using **Shrimp** 🦐*
 
