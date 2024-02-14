@@ -127,7 +127,9 @@ class Shrimp:
 
         try:
             asyncio.run(self._serve(ip, port))
-        except:
+        except KeyboardInterrupt:
+            self.close()
+        except asyncio.CancelledError:
             self.close()
 
     def nbserve(self, ip: str = "0.0.0.0", port: int = 8080) -> None:
