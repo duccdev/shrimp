@@ -125,7 +125,10 @@ class Shrimp:
             port (int, optional): Port. Defaults to 8080.
         """
 
-        asyncio.run(self._serve(ip, port))
+        try:
+            asyncio.run(self._serve(ip, port))
+        except:
+            self.close()
 
     def nbserve(self, ip: str = "0.0.0.0", port: int = 8080) -> None:
         """Starts serving Shrimp on IP:port (is non-blocking, for blocking serve, use Shrimp.serve)
@@ -136,7 +139,7 @@ class Shrimp:
         """
 
         Thread(
-            target=(lambda l_ip, l_port: asyncio.run(self._serve(l_ip, l_port))),
+            target=(lambda l_ip, l_port: self.serve(l_ip, l_port)),
             args=(ip, port),
         ).start()
 
