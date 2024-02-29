@@ -1,7 +1,7 @@
 from enum import Enum
 from .errors import InvalidMethodError
 
-__all__ = ("HttpMethod",)
+__all__ = ("HttpMethod", "http_method_from_str")
 
 
 class HttpMethod(Enum):
@@ -15,6 +15,18 @@ class HttpMethod(Enum):
 
 
 def http_method_from_str(method: str) -> HttpMethod:
+    """Function that converts a method string to a HttpMethod
+
+    ## Arguments:
+        `method` (`str`): The HTTP method as a string
+
+    ## Returns:
+        `HttpMethod`: The HTTP method as an HttpMethod enum
+
+    ## Raises:
+        `InvalidMethodError`: When the method string is invalid
+    """
+
     match method:
         case "GET":
             return HttpMethod.GET

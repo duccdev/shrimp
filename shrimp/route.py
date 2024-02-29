@@ -15,7 +15,7 @@ class Route:
     ) -> None:
         """Creates a route
 
-        Args:
+        ## Arguments:
             method (HttpMethod): HTTP method
             path (str): HTTP path
             handler (Callable[[Request], BaseResponse]): Request handler

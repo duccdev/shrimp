@@ -13,11 +13,24 @@ class BaseResponse:
         headers: Mapping[str, str] = {},
         body: str | bytes | None = None,
     ) -> None:
+        """The base response class that all other responses derive from
+
+        ## Arguments:
+            `status` (`HttpStatus = OK`): The HTTP response status
+            `headers` (`Mapping[str, str] = {}`): The HTTP response headers
+            `body` (`body: str | bytes | None = None`): The HTTP response body
+        """
+
         self.status = status
         self.headers = headers
         self.body = body
 
     def _raw(self) -> bytes:
+        """Converts the response into a HTTP response string in bytes
+
+        ## Returns:
+            `bytes`: HTTP response string in bytes
+        """
         status_line = f"HTTP/1.1 {self.status.code} {self.status.message}"
 
         headers = "\r\n".join(
@@ -38,6 +51,16 @@ class FileResponse(BaseResponse):
         headers: Mapping[str, str] = {},
         is_binary: bool = False,
     ) -> None:
+        """Responds with a file
+
+        ## Arguments:
+            `filename` (`str | PathLike`): Path to the file you want to send
+            `mime_type` (`str = "text/html"`): Mime-type of the data in the file
+            `status` (`HttpStatus = OK`): The HTTP response status
+            `headers` (`Mapping[str, str] = {}`): The HTTP response headers
+            `is_binary` (`bool` = False`): Tells Python whether or not this is binary or text
+        """
+
         final_headers = dict(headers)
         final_headers["Content-Type"] = mime_type
 
@@ -52,6 +75,14 @@ class JSONResponse(BaseResponse):
         status: HttpStatus = OK,
         headers: Mapping[str, str] = {},
     ) -> None:
+        """Responds with JSON
+
+        ## Arguments:
+            `status` (`HttpStatus = OK`): The HTTP response status
+            `headers` (`Mapping[str, str] = {}`): The HTTP response headers
+            `body` (`dict | list | tuple | str | int | float`): JSON data
+        """
+
         final_headers = dict(headers)
         final_headers["Content-Type"] = "application/json"
 
@@ -65,6 +96,14 @@ class TextResponse(BaseResponse):
         status: HttpStatus = OK,
         headers: Mapping[str, str] = {},
     ) -> None:
+        """Responds with text
+
+        ## Arguments:
+            `status` (`HttpStatus = OK`): The HTTP response status
+            `headers` (`Mapping[str, str] = {}`): The HTTP response headers
+            `body` (`str`): Text content to send
+        """
+
         final_headers = dict(headers)
         final_headers["Content-Type"] = "text/plain"
 
@@ -78,6 +117,14 @@ class HTMLResponse(BaseResponse):
         status: HttpStatus = OK,
         headers: Mapping[str, str] = {},
     ) -> None:
+        """Responds with HTML
+
+        ## Arguments:
+            `status` (`HttpStatus = OK`): The HTTP response status
+            `headers` (`Mapping[str, str] = {}`): The HTTP response headers
+            `body` (`str`): HTML content to send
+        """
+
         final_headers = dict(headers)
         final_headers["Content-Type"] = "text/html"
 

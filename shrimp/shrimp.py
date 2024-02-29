@@ -17,9 +17,9 @@ class Shrimp:
     def __init__(self, max_conns: int = 100000, max_req_size: int = 16384) -> None:
         """Creates a Shrimp server
 
-        Args:
-            max_conns (int, optional): Max connections and threads (Do not set to 0). Defaults to 100000.
-            max_req_size (int, optional): Max request size. Defaults to 16384.
+        ## Arguments:
+            `max_conns` (`int`, optional): Max connections and threads (Do not set to 0). Defaults to 100000.
+            `max_req_size` (`int`, optional): Max request size. Defaults to 16384.
         """
 
         self.routes: list[Route] = []
@@ -32,9 +32,12 @@ class Shrimp:
     async def _serve(self, ip: str, port: int) -> None:
         """Internal serve function, Shrimp.serve and Shrimp.nbserve is a wrapper on Shrimp._serve
 
-        Args:
-            ip (str): IP
-            port (int): Port
+        ## Arguments:
+            `ip` (`str`): IP
+            `port` (`int`): Port
+
+        ## Raises:
+            `OSError`: When there is an error trying to create the socket
         """
 
         self._socket.bind((ip, port))
@@ -60,9 +63,12 @@ class Shrimp:
     async def _handle(self, conn: socket.socket, addr: tuple[str, int]) -> None:
         """Internal connection handler
 
-        Args:
-            conn (socket.socket): TCP client socket
-            addr (tuple[str, int]): Client address
+        ## Arguments:
+            `conn` (`socket.socket`): TCP client socket
+            `addr` (`tuple[str, int]`): Client address
+
+        ## Raises:
+            `TypeError`: When the route returns something other than a BaseResponse
         """
 
         while True:
@@ -88,7 +94,14 @@ class Shrimp:
 
             for route in self.routes:
                 if route.path == req.path and route.method == req.method:
-                    conn.sendall((await maybe_coroutine(route.handler, req))._raw())
+                    res = await maybe_coroutine(route.handler, req)
+
+                    if not isinstance(res, BaseResponse):
+                        raise TypeError(
+                            f"Expected BaseResponse-derived value from route, got {type(res)}"
+                        )
+
+                    conn.sendall(res._raw())
                     conn.close()
                     return
 
@@ -103,13 +116,14 @@ class Shrimp:
     def get(self, path: str):
         """Decorator for creating a GET route
 
-        Args:
-            path (str): Route path
+        ## Arguments:
+            `path` (`str`): Route path
 
-        Decorated function args:
-            req (Request): Request data
+        ## Decofunction arguments:
+            `req` (`Request`): Request data
 
-        Decorated function return: BaseResponse
+        ## Decofunction returns:
+            `BaseResponse`
         """
 
         def wrapper(handler: Callable[[Request], BaseResponse]):
@@ -120,7 +134,7 @@ class Shrimp:
     def serve(self, ip: str = "0.0.0.0", port: int = 8080) -> None:
         """Starts serving Shrimp on IP:port (is blocking, for non-blocking serve, use Shrimp.serve)
 
-        Args:
+        ## Arguments:
             ip (str, optional): IP. Defaults to "0.0.0.0".
             port (int, optional): Port. Defaults to 8080.
         """
@@ -135,7 +149,7 @@ class Shrimp:
     def nbserve(self, ip: str = "0.0.0.0", port: int = 8080) -> None:
         """Starts serving Shrimp on IP:port (is non-blocking, for blocking serve, use Shrimp.serve)
 
-        Args:
+        ## Arguments:
             ip (str, optional): IP. Defaults to "0.0.0.0".
             port (int, optional): Port. Defaults to 8080.
         """

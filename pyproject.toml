@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "shrimp-http"
-version = "0.1.3"
+version = "0.1.4"
 description = "Shrimp 🦐 is a batteries-included zero-dependency WSGI/ASGI web-framework for Python"
 readme = "README.md"
 authors = [{ name = "Krill Issue" }]
