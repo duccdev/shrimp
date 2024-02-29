@@ -132,7 +132,7 @@ class Shrimp:
         return wrapper
 
     def serve(self, ip: str = "0.0.0.0", port: int = 8080) -> None:
-        """Starts serving Shrimp on IP:port (is blocking, for non-blocking serve, use Shrimp.serve)
+        """Starts serving Shrimp on IP:port (is blocking, for non-blocking serve, use Shrimp.nbserve)
 
         ## Arguments:
             ip (str, optional): IP. Defaults to "0.0.0.0".
