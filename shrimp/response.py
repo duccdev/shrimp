@@ -3,7 +3,13 @@ from os import PathLike
 from typing import Mapping
 from .httpstatus import OK, HttpStatus
 
-__all__ = ("BaseResponse", "FileResponse")
+__all__ = (
+    "BaseResponse",
+    "FileResponse",
+    "JSONResponse",
+    "TextResponse",
+    "HTMLResponse",
+)
 
 
 class BaseResponse:
