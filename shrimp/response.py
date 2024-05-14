@@ -37,15 +37,16 @@ class BaseResponse:
         ## Returns:
             `bytes`: HTTP response string in bytes
         """
+        crlf = "\r\n"
+
         status_line = f"HTTP/1.1 {self.status.code} {self.status.message}"
-
-        headers = "\r\n".join(
-            [f"{name}: {self.headers[name]}" for name in self.headers]
+        headers = (
+            "\r\n".join([f"{name}: {self.headers[name]}" for name in self.headers])
+            + f"{crlf}Content-Length: {len(self.body) if self.body is not None else 0}"
         )
+        appendix = f"{crlf}{crlf}{self.body}" if self.body is not None else ""
 
-        appendix = f"\r\n\r\n{self.body}" if self.body is not None else ""
-
-        return (f"{status_line}\r\n{headers}{appendix}").encode()
+        return (f"{status_line}{crlf}{headers}{appendix}").encode()
 
 
 class FileResponse(BaseResponse):
