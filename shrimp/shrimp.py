@@ -18,8 +18,8 @@ class Shrimp:
         """Creates a Shrimp server
 
         ## Arguments:
-            `max_conns` (`int`, optional): Max connections and threads (Do not set to 0). Defaults to 100000.
-            `max_req_size` (`int`, optional): Max request size. Defaults to 16384.
+            `max_conns` (`int`, optional, 100000): Max connections and threads. (Set to 0 for no limit)
+            `max_req_size` (`int`, optional, 16384): Max request size.
         """
 
         self.routes: list[Route] = []
@@ -27,7 +27,13 @@ class Shrimp:
         self.max_req_size = max_req_size
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._executor = ThreadPoolExecutor(self.max_conns)
+
+        if max_conns > 0:
+            self._executor = ThreadPoolExecutor(self.max_conns)
+            self._unlimited_conns = False
+            return
+
+        self._unlimited_conns = True
 
     async def _serve(self, ip: str, port: int) -> None:
         """Internal serve function, Shrimp.serve and Shrimp.nbserve is a wrapper on Shrimp._serve
@@ -135,8 +141,8 @@ class Shrimp:
         """Starts serving Shrimp on IP:port (is blocking, for non-blocking serve, use Shrimp.nbserve)
 
         ## Arguments:
-            ip (str, optional): IP. Defaults to "0.0.0.0".
-            port (int, optional): Port. Defaults to 8080.
+            ip (str, optional, "0.0.0.0"): Server IP.
+            port (int, optional, 8080): Server port.
         """
 
         try:
@@ -150,8 +156,8 @@ class Shrimp:
         """Starts serving Shrimp on IP:port (is non-blocking, for blocking serve, use Shrimp.serve)
 
         ## Arguments:
-            ip (str, optional): IP. Defaults to "0.0.0.0".
-            port (int, optional): Port. Defaults to 8080.
+            ip (str, optional, "0.0.0.0"): Server IP.
+            port (int, optional, 8080): Server port.
         """
 
         Thread(
