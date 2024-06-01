@@ -60,4 +60,5 @@ To install **Shrimp** 🦐, run the following `pip` command.
 $ pip install -U shrimp-http
 ```
 
-**Shrimp** 🦐 is fully made with built-in packages. There's no dependencies, hence being batteries-included.
+**Shrimp** 🦐 is fully made with built-in packages. There's no dependencies, hence being batteries-included.  
+Note: Shrimp for Python is on low maintenance
