@@ -1,22 +1,17 @@
-import asyncio
-from typing import Callable, Coroutine, Any
+from typing import Coroutine, Any
 
 
-async def maybe_coroutine(func: Callable | Coroutine, *args, **kwargs) -> Any | None:
-    """An async function that can await another function or result or run sync functions
+async def maybe_coroutine(value: Any | Coroutine) -> Any | None:
+    """An async function to await a coroutine value and return it or return the value if it's not a coroutine
 
     ## Arguments:
-        `func` (`Callable | Coroutine`): The function or coroutine to await or run
-        `*args` and `**kwargs`: To be passed to the function
+        `value` (`Any | Coroutine`): Any value or a coroutine
 
     ## Returns:
-        `Any | None`: Any if the function/coroutine has a value or none if no value
+        `Any | None`: Any if the coroutine/value has a value or none if no value
     """
 
-    if isinstance(func, Callable):
-        if asyncio.iscoroutinefunction(func):
-            return await func(*args, **kwargs)
+    if isinstance(value, Coroutine):
+        return await value
 
-        return func(*args, **kwargs)
-
-    return await func
+    return value
