@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "shrimp-http"
-version = "0.1.4"
+version = "0.1.5"
 description = "Shrimp 🦐 is a batteries-included zero-dependency WSGI/ASGI web-framework for Python"
 readme = "README.md"
-authors = [{ name = "Krill Issue" }]
+authors = [{ name = "duccdev" }]
 license = { file = "LICENSE" }
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -22,4 +22,4 @@ requires-python = ">=3.10"
 dev = ["black"]
 
 [project.urls]
-Homepage = "https://github.com/krillissue/shrimp"
+Homepage = "https://github.com/duccdev/shrimp"

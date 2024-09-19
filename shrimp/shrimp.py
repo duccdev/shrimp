@@ -3,11 +3,12 @@ from concurrent.futures import ThreadPoolExecutor
 from traceback import print_exc
 from threading import Thread
 from typing import Callable
+
 from .route import Route
 from .httpmethod import HttpMethod
 from .httpstatus import InternalServerError, NotFound, ContentTooLarge
 from .request import Request
-from .response import BaseResponse
+from .response import BaseResponse, HTMLResponse
 
 __all__ = ("Shrimp",)
 
@@ -71,8 +72,6 @@ class Shrimp:
                     continue
 
                 executor.submit(handler)
-        except KeyboardInterrupt:
-            self._socket.close()
         except OSError as e:
             if e.errno == 9:
                 return
@@ -103,7 +102,11 @@ class Shrimp:
 
             if len(data) >= (self.max_req_size + 1):
                 try:
-                    conn.sendall(BaseResponse(ContentTooLarge)._raw())
+                    conn.sendall(
+                        HTMLResponse(
+                            "<h1>Content Too Large</h1>", ContentTooLarge
+                        )._raw()
+                    )
                 except:
                     pass
 
@@ -113,10 +116,8 @@ class Shrimp:
                 print_exc(file=sys.stderr)
                 try:
                     conn.sendall(
-                        BaseResponse(
-                            InternalServerError,
-                            {"Content-Type": "text/html"},
-                            "<h1>Internal Server Error</h1>",
+                        HTMLResponse(
+                            "<h1>Internal Server Error</h1>", InternalServerError
                         )._raw()
                     )
                 except:
@@ -141,11 +142,7 @@ class Shrimp:
                     return
 
             try:
-                conn.sendall(
-                    BaseResponse(
-                        NotFound, {"Content-Type": "text/html"}, "<h1>Not Found</h1>"
-                    )._raw()
-                )
+                conn.sendall(HTMLResponse("<h1>Not Found</h1>", NotFound)._raw())
             except:
                 pass
             conn.close()
